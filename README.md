@@ -8,7 +8,7 @@ This was not my idea. I merely followed up on [this great tutorial](https://mach
 
 ## Details
 
-Porting the python code from Jason Brownlee to c++ is a great exercise to freshen up a bit on object oriented programming (using classes to represent neurons and layers) and vector handling. However, there are many ways that a network like this can be build in c++ and I chose to dive into it without much planning. So the code might not be very beautiful, perfectly encapsuled or easy to comprehend (as a matter of fact, I know it isn't😔) but it was fun nevertheless.
+Porting the python code from Jason Brownlee to c++ is a great exercise to freshen up a bit on object oriented programming (using classes to represent neurons and layers) and vector handling. It also helps a great deal with understanding how neural networks work on the inside. However, there are many ways that a network like this can be build in c++ and I chose to dive into it without much planning. So the code might not be very beautiful, perfectly encapsuled or easy to comprehend (as a matter of fact, I know it isn't😔) but it was fun nevertheless.
 
 ## Compilation & Usage
 
