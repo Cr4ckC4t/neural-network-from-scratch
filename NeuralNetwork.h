@@ -60,7 +60,6 @@ public:
 	void train(std::vector<std::vector<float>>trainings_data, float l_rate, size_t n_epoch, size_t n_outputs);
 	int predict(std::vector<float> input);
 
-	void display();
 	void display_human();
 
 private:
