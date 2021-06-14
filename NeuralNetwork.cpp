@@ -54,7 +54,7 @@ void Neuron::activate(std::vector<float> inputs) {
 * Transfer the activation of the neuron to an actual output
 */
 void Neuron::transfer() {
-	m_output = static_cast<float>(1.0 / (1.0 + std::exp(-m_activation)));
+	m_output = 1.0f / (1.0f + std::exp(-m_activation));
 }
 
 /* LAYER */
@@ -204,7 +204,7 @@ void Network::update_weights(std::vector<float> inputs, float l_rate) {
 				weights[j] += l_rate * layer_neurons[n].get_delta() * new_inputs[j];
 			}
 			// update bias
-			weights[weights.size() - 1] += l_rate * layer_neurons[n].get_delta();
+			weights.back() += l_rate * layer_neurons[n].get_delta();
 		}
 	}
 }
@@ -242,43 +242,7 @@ int Network::predict(std::vector<float> input) {
 }
 
 /*
-* Display the network
-*/
-void Network::display() {
-	std::cout << "{" << std::endl;
-	for (size_t l = 0; l < m_layers.size(); l++)
-	{
-		Layer layer = m_layers[l];
-		std::cout << "\t{";
-		for (size_t i = 0; i < layer.get_neurons().size(); i++)
-		{
-			Neuron neuron = layer.get_neurons()[i];
-			std::cout << "{{{";
-			std::vector<float> weights = neuron.get_weights();
-			for (size_t w = 0; w < weights.size(); ++w)
-			{
-				std::cout << weights[w];
-				if (w < weights.size() - 1) {
-					std::cout << ", ";
-				}
-			}
-			std::cout << "}, " << neuron.get_output() << ", " << neuron.get_activation() << ", " << neuron.get_delta();
-			std::cout << "}}";
-			if (i < layer.get_neurons().size() - 1) {
-				std::cout << ", ";
-			}
-		}
-		std::cout << "}";
-		if (l < m_layers.size() - 1) {
-			std::cout << ", ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << "}" << std::endl;
-}
-
-/*
-* Display the network in human readable format
+* Display the network in a human readable format
 */
 void Network::display_human() {
 	std::cout << "[Network] (Layers: " << m_nLayers << ")" << std::endl;
