@@ -14,6 +14,17 @@ std::vector<std::vector<float>> load_csv_data(std::string filename);
 std::vector<float> evaluate_network(std::vector<std::vector<float>> dataset, int n_folds, float l_rate, int n_epoch, int n_hidden);
 float accuracy_metric(std::vector<int> expect, std::vector<int> predict);
 
+
+/*
+* This main function will load a csv-dataset and normalize the data. Subsequently, a network 
+* for this data will be initialized, trained and evaluated using cross-validation.
+* 
+* Feel free to play around with the folds, learning rate, epochs and hidden neurons.
+* If you want to modify the network itself (activation function, additional layers, etc.)
+* you will want to look at NeuralNetwork.cpp.
+* 
+* (See at the bottom for a second main function that's for displaying and testing a very small network.)
+*/
 int main(int argc, char* argv[]) {
 	std::cout << "Neural Network with Backpropagation in C++ from scratch" << std::endl;
 
@@ -21,7 +32,7 @@ int main(int argc, char* argv[]) {
 	csv_data = load_csv_data("seeds_dataset.csv");
 	
 	/*
-	* Normalize the last column (to a 0 based index of classifiers) 
+	* Normalize the last column (turning the outputs into values starting from 0 for the one-hot encoding in the end)
 	*/
 	std::map<int, int> lookup = {};
 	int index = 0;
@@ -37,16 +48,20 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	int n_folds = 5;
-	float l_rate = static_cast<float>(0.3);
-	int n_epoch = 500;
-	int n_hidden = 5;
+	int n_folds = 5;		// how many folds you want to create from the given dataset
+	float l_rate = 0.3f;	// how much of an impact shall an error have on a weight
+	int n_epoch = 500;		// how many times should weights be updated
+	int n_hidden = 5;		// how many neurons you want in the first layer
 
+	// test the implemented neural network
 	std::vector<float> scores = evaluate_network(csv_data, n_folds, l_rate, n_epoch, n_hidden);
 
+	// calculate the mean average of the scores across each cross validation
 	float mean = std::accumulate(scores.begin(), scores.end(), decltype(scores)::value_type(0)) / static_cast<float>(scores.size());
 
 	std::cout << "Mean accuracy: " << mean << std::endl;
+
+	return 0;
 }
 
 std::vector<float> evaluate_network(std::vector<std::vector<float>> dataset, int n_folds, float l_rate, int n_epoch, int n_hidden) {
@@ -106,7 +121,7 @@ std::vector<float> evaluate_network(std::vector<std::vector<float>> dataset, int
 
 		std::set<float> results;
 		for (const auto& r : train_set) {
-			results.insert(r[r.size() - 1]);
+			results.insert(r.back());
 		}
 		int n_outputs = results.size();
 		int n_inputs = train_set[0].size() - 1;
@@ -127,6 +142,9 @@ std::vector<float> evaluate_network(std::vector<std::vector<float>> dataset, int
 	return scores;
 }
 
+/* 
+* 
+*/
 float accuracy_metric(std::vector<int> expect, std::vector<int> predict) {
 	int correct = 0;
 
@@ -136,7 +154,7 @@ float accuracy_metric(std::vector<int> expect, std::vector<int> predict) {
 			correct++;
 		}
 	}
-	return static_cast<float>(correct * 100.0F / predict.size());
+	return static_cast<float>(correct * 100.0f / predict.size());
 }
 
 /*
@@ -163,7 +181,7 @@ std::vector<std::vector<float>> load_csv_data(std::string filename) {
 		// transform the strings to floats
 		std::transform(srow.begin(), srow.end(), row.begin(), [](std::string const& val) {return std::stof(val); });
 		
-		// keep track of the min and max value for each column
+		// keep track of the min and max value for each column for subsequent normalization
 		if (first) {
 			mins = row;
 			maxs = row;
@@ -198,9 +216,14 @@ std::vector<std::vector<float>> load_csv_data(std::string filename) {
 
 
 /*
-int _main(int argc, char* argv[]) {
-	std::cout << "Neural Network with Backpropagation in C++ from scratch" << std::endl;
+* // Comment out this main function to test the network on a very small dataset and visualize it
+* 
+int main(int argc, char* argv[]) {
+	std::cout << "Neural Network with Backpropagation in C++ from scratch (development-phase)" << std::endl;
 
+	// define a set of trainings data
+	// each row has two inputs and one result
+	// the result is either one or zero (binary classfication)
 	std::vector<std::vector<float>> traindata {
 		{2.7810836,		2.550537003,	0},
 		{1.465489372,	2.362125076,	0},
@@ -221,20 +244,28 @@ int _main(int argc, char* argv[]) {
 	}
 	int n_outputs = results.size();
 	int n_inputs = traindata[0].size() - 1;
-	float learn_rate = 0.4;
-	int epochs = 50;
 
+	// we can experiment with these values
+	float learn_rate = 0.4; // the learn rate specifies how much the error will influence a weight
+	int epochs = 50; // the epochs specify how often an error will be back propagated through the network
+
+	// initialize a network with 2 neurons in the first hidden layer
 	Network* network = new Network();
 	network->initialize_network(n_inputs, 2, n_outputs);
 
+	// train the network (forward propagation, backward propagation and weight updating)
 	network->train(traindata, learn_rate, epochs, n_outputs);
 
+	// display the created network (in an understandable format) for visualization purposes
 	network->display_human();
-
+	
+	// make a prediction on the same data we trained with
 	std::cout << "[Prediction]" << std::endl;
 
 	for (const auto& data : traindata) {
 		int prediction = network->predict(data);
 		std::cout << "\t[>] Expected=" << data.back() << ", Got=" << prediction << std::endl;
 	}
+
+	return 0;
 }*/
