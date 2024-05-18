@@ -1,0 +1,3 @@
+/workspace/neural-network-from-scratch/CMakeFiles/neural-network.dir
+/workspace/neural-network-from-scratch/CMakeFiles/edit_cache.dir
+/workspace/neural-network-from-scratch/CMakeFiles/rebuild_cache.dir
