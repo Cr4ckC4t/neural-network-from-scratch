@@ -1,0 +1,1 @@
+g++ "CMakeFiles/neural-network.dir/src/main.cpp.o" "CMakeFiles/neural-network.dir/src/NeuralNetwork.cpp.o" -o neural-network
